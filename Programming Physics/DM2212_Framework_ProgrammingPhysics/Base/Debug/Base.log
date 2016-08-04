@@ -1,0 +1,63 @@
+﻿Build started 3/8/2016 2:44:50 PM.
+     1>Project "C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\Base\Base.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\/Common/Source" /I"C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\/glew/include" /I"C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\/glfw/include" /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\SceneAssignment2.cpp
+         SceneAssignment2.cpp
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(30): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(64): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(69): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(71): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(87): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(98): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(101): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(106): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(112): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(161): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(177): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(313): warning C4800: 'float' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(314): warning C4804: '>' : unsafe use of type 'bool' in operation
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(336): warning C4800: 'float' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(337): warning C4804: '>' : unsafe use of type 'bool' in operation
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(366): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(376): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(377): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(403): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(413): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(414): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(436): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(446): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(447): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(537): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(744): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(788): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(948): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(955): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(1022): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(1033): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\sri\desktop\gdt year 2 work\programming physics\dm2212_framework_other one\base\source\sceneassignment2.cpp(301): warning C4715: 'SceneAssignment2::CheckCollision' : not all control paths return a value
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\Debug" /LIBPATH:"C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\/glfw/lib-msvc100" /LIBPATH:"C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\/glew/lib" Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\Debug\Base.lib" /MACHINE:X86 Debug\Application.obj
+         Debug\Camera.obj
+         Debug\Enemy.obj
+         Debug\GameObject.obj
+         Debug\LoadOBJ.obj
+         Debug\LoadTGA.obj
+         Debug\main.obj
+         Debug\Mesh.obj
+         Debug\MeshBuilder.obj
+         Debug\SceneAssigment1.obj
+         Debug\SceneAssignment2.obj
+         Debug\SceneAsteroid.obj
+         Debug\SceneBase.obj
+         Debug\SceneCollision.obj
+         Debug\SceneKinematics.obj
+         Debug\shader.obj
+         Debug\Utility.obj
+     1>Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+     1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+         Base.vcxproj -> C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\Debug\Base.exe
+     1>Done Building Project "C:\Users\Sri\Desktop\GDT YEAR 2 WORK\Programming Physics\DM2212_Framework_OTHER ONE\Base\Base.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.48

@@ -1,0 +1,39 @@
+﻿Build started 8/4/2016 9:53:06 AM.
+     1>Project "C:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\Base\Base.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\/Common/Source /IC:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\/glew/include /IC:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\/glfw/include /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\SceneShadow.cpp
+         SceneShadow.cpp
+     1>c:\users\155129r\desktop\dm2210_framework_acomg_lab2_srishamharan_155129r\base\source\sceneshadow.cpp(255): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\155129r\desktop\dm2210_framework_acomg_lab2_srishamharan_155129r\base\source\sceneshadow.cpp(320): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\155129r\desktop\dm2210_framework_acomg_lab2_srishamharan_155129r\base\source\sceneshadow.cpp(675): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\155129r\desktop\dm2210_framework_acomg_lab2_srishamharan_155129r\base\source\sceneshadow.cpp(828): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\Debug /LIBPATH:"C:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\/glfw/lib-msvc100" /LIBPATH:C:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\/glew/lib Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\Debug\Base.lib" /MACHINE:X86 Debug\Application.obj
+         Debug\Camera.obj
+         Debug\Camera2.obj
+         Debug\Camera3.obj
+         Debug\DepthFBO.obj
+         Debug\LoadHmap.obj
+         Debug\LoadOBJ.obj
+         Debug\LoadTGA.obj
+         Debug\main.obj
+         Debug\Mesh.obj
+         Debug\MeshBuilder.obj
+         Debug\Particle.obj
+         Debug\SceneAssn.obj
+         Debug\SceneLight.obj
+         Debug\SceneLight2.obj
+         Debug\SceneSkybox.obj
+         Debug\SceneText.obj
+         Debug\shader.obj
+         Debug\SceneShadow.obj
+         Debug\SpriteAnimation.obj
+         Debug\Utility.obj
+     1>Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+     1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+         Base.vcxproj -> C:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\Debug\Base.exe
+     1>Done Building Project "C:\Users\155129R\Desktop\DM2210_FRAMEWORK_ACOMG_LAB2_SriShamHaran_155129R\Base\Base.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.67
