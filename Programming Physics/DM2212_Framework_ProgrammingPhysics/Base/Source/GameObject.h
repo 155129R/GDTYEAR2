@@ -25,6 +25,7 @@ struct GameObject
         GO_LEFTFLIPPER,
         GO_RIGHTFLIPPER,
         GO_BOARD,
+        GO_GATE,
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;

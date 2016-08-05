@@ -146,10 +146,11 @@ void SceneBase::Init()
     meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("BACKGROUND", Color(0.5, 0, 0.2), 1.f, 1, 1);
     meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background_arcade.tga");
 
+
 	bLightEnabled = true;
 
     //meshList[GEO_BLUEBALL] = MeshBuilder::GenerateCylinder("BLUEBALL", Color(0, 1, 1), 1, 1, 1, 10);
-    meshList[GEO_BLUEBALL] = MeshBuilder::GenerateOBJ("BLUEBALL", "OBJ\\dragon.obj");
+    meshList[GEO_BLUEBALL] = MeshBuilder::GenerateOBJ("BLUEBALL", "OBJ\\tower.obj");
     meshList[GEO_BLUEBALL]->textureID = LoadTGA("Image//dragon.tga");
     changeColor = false;
 }

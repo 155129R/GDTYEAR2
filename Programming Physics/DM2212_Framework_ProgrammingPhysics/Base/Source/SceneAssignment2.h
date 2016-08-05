@@ -22,7 +22,7 @@ public:
     virtual void Update(double dt);
     virtual void Render();
     virtual void Exit();
-
+	void RenderSkybox();
     void RenderGO(GameObject *go);
 
     GameObject* FetchGO();
@@ -58,6 +58,8 @@ protected:
     bool shouldUpdate = true;
     int m_lives;
     bool ballDead;
+	bool gate;
+	GameObject *gateGO;
 };
 
 #endif

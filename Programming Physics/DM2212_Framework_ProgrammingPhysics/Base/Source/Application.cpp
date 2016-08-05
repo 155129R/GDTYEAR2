@@ -97,7 +97,7 @@ void Application::Init()
 	m_height = 768;
     //m_width = 1360;
     //m_height = 768;
-	m_window = glfwCreateWindow(m_width, m_height, "Physics", NULL, NULL);
+	m_window = glfwCreateWindow(m_width, m_height, "Physics", glfwGetPrimaryMonitor(), NULL);
 
 	//If the window couldn't be created
 	if (!m_window)
@@ -114,7 +114,7 @@ void Application::Init()
 	//glfwSetKeyCallback(m_window, key_callback);
   
 	glfwSetWindowSizeCallback(m_window, resize_callback);
-    glfwSetWindowPos(m_window, 1, 0);
+   // glfwSetWindowPos(m_window, 1, 0);
 
 	glewExperimental = true; // Needed for core profile
 	//Initialize GLEW

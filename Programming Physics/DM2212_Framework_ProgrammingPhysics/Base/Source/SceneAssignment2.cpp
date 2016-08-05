@@ -34,6 +34,8 @@ void SceneAssignment2::Init()
     m_score = 0;
 
     worldInit();
+
+	gate = true;
     //PlaySound(TEXT("8bit.wav"), NULL, SND_ASYNC | SND_LOOP);
 
 }
@@ -69,7 +71,6 @@ void SceneAssignment2::worldInit()
             go->pos += Vector3(m_worldWidth * 0.4f, m_worldHeight * 0.55, 0);
         else
             go->pos += Vector3(m_worldWidth * 0.4f, m_worldHeight * 0.5, 0);
-
     }
 
     for (int i = 0; i < 8; i++)
@@ -179,6 +180,14 @@ void SceneAssignment2::worldInit()
     }
     {
         GameObject* go = FetchGO();
+        go->type = GameObject::GO_GATE;
+        go->active = true;
+        go->pos.Set(m_worldWidth * 0.57f, m_worldHeight * 0.72f, 0);
+        go->scale.Set(2, 46, 2);
+        go->normal.Set(1, 0, 0);
+    }
+    {
+        GameObject* go = FetchGO();
         go->type = GameObject::GO_WALL;
         go->active = true;
         go->pos.Set(m_worldWidth * 0.57f, m_worldHeight * 0.15f, 0);
@@ -253,6 +262,22 @@ bool SceneAssignment2::CheckCollision(GameObject *go1, GameObject *go2, float dt
                                     && go1->vel.Dot(N) > 0;
                                 break;
     }
+	case GameObject::GO_GATE:
+	{
+		Vector3 w0 = go2->pos;
+		Vector3 b1 = go1->pos;
+		Vector3 N = go2->normal;
+		Vector3 dir = w0 - b1;
+		if (dir.Dot(N) < 0)
+			N = -N;
+		float r = go1->scale.x;
+		float h = go2->scale.x;
+		float l = go2->scale.y;
+		Vector3 NP = Vector3(-N.y, N.x); //Vector3(N.y, -N.x)
+		return abs((w0 - b1).Dot(N)) < r + h * 0.5f && abs(dir.Dot(NP)) < l * 0.5f
+			&& go1->vel.Dot(N) > 0;
+		break;
+	}
     case GameObject::GO_LEFTFLIPPER:
     {
                                 Vector3 w0 = go2->pos;
@@ -492,29 +517,10 @@ void SceneAssignment2::CollisionResponse(GameObject *go1, GameObject *go2, float
     }
     case GameObject::GO_BLUEBALL:
     {
-                                m1 = go1->mass;
-                                m2 = go2->mass;
-                                u1 = go1->vel;
-                                u2 = go2->normal * 2;
-                                initialKE = 0.5f * m1 * v1.LengthSquared() + 0.5f * m2 * v2.LengthSquared();
-
-                                initialMomentum = m1 * u1 + m2 * u2;
-
-                                Vector3 momentum1 = m1 * u1;
-                                Vector3 momentum2 = m2 * u2;
-
-                                Vector3 u1n, u2n;
-                                Vector3 N = (go2->pos - go1->pos).Normalized();
-                                u1n = (u1.Dot(N) * N);
-                                u2n = (u2.Dot(N) * N);
-
-                                go1->vel = (u1 + ((2 * m2) / (m1 + m2)) * (u2n - u1n)) * 1.2f;
-                                //go2->vel = u2 + ((2 * m1) / (m1 + m2)) * (u1n - u2n);
-
-                                v1 = go1->vel;
-                                v2 = go2->vel;
-                                finalKE = 0.5f * m1 * v1.LengthSquared() + 0.5f * m2 * v2.LengthSquared();
-                                finalMomentum = m1 * v1 + m2 * v2;
+								u1 = go1->vel;
+								Vector3 N = (go2->pos - go1->pos).Normalized();
+								Vector3 u1n = (u1.Dot(N) * N);
+								go1->vel = (u1 - 2 * u1n);
                                 m_score += 1;
                                 break;
     }
@@ -529,6 +535,17 @@ void SceneAssignment2::CollisionResponse(GameObject *go1, GameObject *go2, float
 
                                 break;
     }
+	case GameObject::GO_GATE:
+	{
+		u1 = go1->vel;
+		Vector3 N = go2->normal;
+		Vector3 uN = u1.Dot(N) * N;
+		Vector3 updatedVel = ((u1 - (2 * uN)) * 0.5f);
+		go1->vel = updatedVel;
+
+
+		break;
+	}
     case GameObject::GO_PILLAR:
     {
                                   u1 = go1->vel;
@@ -888,12 +905,18 @@ void SceneAssignment2::Update(double dt)
 
     //Physics Simulation Section
     dt *= m_speed;
-
     /*if (counter)
     countTime += dt;*/
     for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
     {
         GameObject *go = (GameObject *)*it;
+		if (go->type == GameObject::GO_GATE)
+		{
+			if (gate == true)
+				go->active = true;
+			else if (gate == false)
+				go->active = false;
+		}
         if (go->active)
         {
             if (go->type == GameObject::GO_BALL)
@@ -908,6 +931,12 @@ void SceneAssignment2::Update(double dt)
                         ballDead = true;
                     }
                 }
+				if (go->pos.x < m_worldWidth * 0.57f)
+				{
+					gate = true;
+				}
+				else gate = false;
+
             }
 
             //Exercise 2a: Rebound game object at screen edges
@@ -974,6 +1003,52 @@ void SceneAssignment2::Update(double dt)
     }
 }
 
+static const float SKYBOXSIZE = 4000.f;
+void SceneAssignment2::RenderSkybox(){
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
+	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
+	RenderMesh(meshList[GEO_BACKGROUND], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
+	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
+	RenderMesh(meshList[GEO_BACKGROUND], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
+	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
+	RenderMesh(meshList[GEO_BACKGROUND], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
+	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
+	RenderMesh(meshList[GEO_BACKGROUND], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
+	RenderMesh(meshList[GEO_BACKGROUND], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
+	modelStack.Rotate(-90, 0, 0, 1);
+	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
+	RenderMesh(meshList[GEO_BACKGROUND], false);
+	modelStack.PopMatrix();
+}
 
 void SceneAssignment2::RenderGO(GameObject *go)
 {
@@ -986,24 +1061,19 @@ void SceneAssignment2::RenderGO(GameObject *go)
         RenderMesh(meshList[GEO_BALL], false);
         modelStack.PopMatrix();
         break;
-    case GameObject::GO_BLUEBALL:
-        modelStack.PushMatrix();
-        modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-        modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-        RenderMesh(meshList[GEO_BLUEBALL], false);
-        modelStack.PopMatrix();
-        break;
-    case GameObject::GO_WALL:
-    {
-                                float degree = Math::RadianToDegree(atan2(go->normal.y, go->normal.x));
-                                modelStack.PushMatrix();
-                                modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-                                modelStack.Rotate(degree, 0, 0, 1);
-                                modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-                                RenderMesh(meshList[GEO_CUBE], true);
-                                modelStack.PopMatrix();
-                                break;
-    }
+
+
+	case GameObject::GO_GATE:
+	{
+		float degree = Math::RadianToDegree(atan2(go->normal.y, go->normal.x));
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(degree, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CUBE], true);
+		modelStack.PopMatrix();
+		break;
+	}
     case GameObject::GO_PILLAR:
     {
                                   modelStack.PushMatrix();
@@ -1044,6 +1114,31 @@ void SceneAssignment2::RenderGO(GameObject *go)
                                         modelStack.PopMatrix();
                                         break;
     }
+	case GameObject::GO_WALL:
+	{
+		float degree = Math::RadianToDegree(atan2(go->normal.y, go->normal.x));
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(degree, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CUBE], true);
+		modelStack.PopMatrix();
+
+		break;
+	}
+	case GameObject::GO_BLUEBALL:
+		//glBlendFunc(GL_ONE, GL_ONE);
+		glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x * 1.8f, go->scale.y, go->scale.z * 1.8f);
+		RenderMesh(meshList[GEO_BLUEBALL], false);
+		modelStack.PopMatrix();
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+
+		break;
     }
 }
 
@@ -1074,12 +1169,13 @@ void SceneAssignment2::Render()
     modelStack.LoadIdentity();
 
    // RenderMesh(meshList[GEO_AXES], false);
-    modelStack.PushMatrix();
-    modelStack.Translate(m_worldWidth * 0.5f, m_worldHeight + m_worldHeight * 1.f, -2);
-    modelStack.Scale(Application::GetWindowWidth() * 0.4f, Application::GetWindowHeight() * 0.8f, 1);
-    modelStack.Rotate(50, 1, 0, 0);
-    RenderMesh(meshList[GEO_BACKGROUND], false);
-    modelStack.PopMatrix();
+    //modelStack.PushMatrix();
+    //modelStack.Translate(m_worldWidth * 0.5f, m_worldHeight + m_worldHeight * 1.f, -2);
+    //modelStack.Scale(Application::GetWindowWidth() * 0.4f, Application::GetWindowHeight() * 0.8f, 1);
+    //modelStack.Rotate(50, 1, 0, 0);
+    //RenderMesh(meshList[GEO_BACKGROUND], false);
+    //modelStack.PopMatrix();
+	RenderSkybox();
     if (m_ghost->active)
         RenderGO(m_ghost);
     for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -1120,7 +1216,6 @@ void SceneAssignment2::Render()
     //std::ostringstream ss;
     //ss << "Object count: " << m_objectCount;
     //RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 9);
-
     //ss.str(std::string());
     //ss.precision(5);
     //ss << "Initial momentum: " << initialMomentum;
