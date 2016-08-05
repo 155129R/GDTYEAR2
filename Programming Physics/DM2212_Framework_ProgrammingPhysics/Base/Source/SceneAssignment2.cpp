@@ -35,8 +35,15 @@ void SceneAssignment2::Init()
 
     worldInit();
 
+	m_lives = 3;
+
 	gate = true;
-    //PlaySound(TEXT("8bit.wav"), NULL, SND_ASYNC | SND_LOOP);
+	uiBallAngle = 0.f;
+	bossAngle = 0.f;
+//    PlaySound(TEXT("8bit.wav"), NULL, SND_ASYNC | SND_LOOP);
+
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 }
 
@@ -178,6 +185,24 @@ void SceneAssignment2::worldInit()
         go->pos += (m_worldWidth * 0.74f, m_worldHeight * 0.15f, 0);
         rightdefPos = go->pos;
     }
+	//for (int i = 0; i < 2; i++)
+	{
+		GameObject* go = FetchGO();
+		go->type = GameObject::GO_MINION;
+		go->active = true;
+		go->scale.Set(4.f, 4.f, 4.f);
+		go->normal.Set(1, 0, 0);
+		go->pos.Set(m_worldWidth * 0.30f /*- (i * 14)*/, m_worldHeight * 0.40f /*+ (i * 10)*/, 0);
+	}
+	//for (int i = 0; i < 2; i++)
+	{
+		GameObject* go = FetchGO();
+		go->type = GameObject::GO_MINION;
+		go->active = true;
+		go->scale.Set(4.f, 4.f, 4.f);
+		go->normal.Set(1, 0, 0); 
+		go->pos.Set(m_worldWidth * 0.50f /*+ (i * 14)*/, m_worldHeight * 0.40f /*+ (i * 10)*/, 0);
+	}
     {
         GameObject* go = FetchGO();
         go->type = GameObject::GO_GATE;
@@ -194,6 +219,14 @@ void SceneAssignment2::worldInit()
         go->scale.Set(2, 46, 2);
         go->normal.Set(1, 0, 0);
     }
+	{
+		GameObject* go = FetchGO();
+		go->type = GameObject::GO_BOSS;
+		go->active = true;
+		go->pos.Set(m_worldWidth * 0.3f, m_worldHeight * 0.86f, 0);
+		go->scale.Set(0.3f, 0.3f, 0.3f);
+		go->normal.Set(1, 0, 0);
+	}
 }
 GameObject* SceneAssignment2::FetchGO()
 {
@@ -246,6 +279,30 @@ bool SceneAssignment2::CheckCollision(GameObject *go1, GameObject *go2, float dt
                                 return (distSquared <= combinedRadius * combinedRadius && relativeVelocity.Dot(relativeposition) < 0);
                                 break;
     }
+	case GameObject::GO_BOSS:
+	{
+		float distSquared = ((go1->pos + go1->vel * dt) - (go2->pos + go2->vel * dt)).LengthSquared();
+		float combinedRadius = go1->scale.x + go2->scale.x;
+
+		Vector3 relativeVelocity = go1->vel - go2->vel;
+		Vector3 relativeposition = go1->pos - go2->pos;
+
+		//Practical 4, Exercise 13: improve collision detection algorithm
+		return (distSquared <= combinedRadius * combinedRadius && relativeVelocity.Dot(relativeposition) < 0);
+		break;
+	}
+	case GameObject::GO_MINION:
+	{
+		float distSquared = ((go1->pos + go1->vel * dt) - (go2->pos + go2->vel * dt)).LengthSquared();
+		float combinedRadius = go1->scale.x + go2->scale.x;
+
+		Vector3 relativeVelocity = go1->vel - go2->vel;
+		Vector3 relativeposition = go1->pos - go2->pos;
+
+		//Practical 4, Exercise 13: improve collision detection algorithm
+		return (distSquared <= combinedRadius * combinedRadius && relativeVelocity.Dot(relativeposition) < 0);
+		break;
+	}
     case GameObject::GO_WALL:
     {
                                 Vector3 w0 = go2->pos;
@@ -524,6 +581,24 @@ void SceneAssignment2::CollisionResponse(GameObject *go1, GameObject *go2, float
                                 m_score += 1;
                                 break;
     }
+	case GameObject::GO_BOSS:
+	{
+		u1 = go1->vel;
+		Vector3 N = (go2->pos - go1->pos).Normalized();
+		Vector3 u1n = (u1.Dot(N) * N);
+		go1->vel = (u1 - 2 * u1n);
+		m_score += 4;
+		break;
+	}
+	case GameObject::GO_MINION:
+	{
+		u1 = go1->vel;
+		Vector3 N = (go2->pos - go1->pos).Normalized();
+		Vector3 u1n = (u1.Dot(N) * N);
+		go1->vel = (u1 - 2 * u1n);
+		m_score += 2;
+		break;
+	}
     case GameObject::GO_WALL:
     {
                                 u1 = go1->vel;
@@ -602,6 +677,7 @@ void SceneAssignment2::Update(double dt)
     
     SceneBase::Update(dt);
     shouldUpdate = true;
+
     if (Application::IsKeyPressed('9'))
     {
         m_speed = Math::Max(0.f, m_speed - 0.1f);
@@ -635,18 +711,25 @@ void SceneAssignment2::Update(double dt)
     else if (bSpacebutton && !Application::IsKeyPressed(VK_SPACE))
     {
         bSpacebutton = false;
-        if (m_ballCount < MAX_BALL)
-        {
-            GameObject *go = FetchGO();
-            go->type = GameObject::GO_BALL;
-            go->pos.Set(m_worldWidth * 0.6f, m_worldHeight * 0.2f, 0);
-            go->vel.Set(0, springEnergy, 0);
-            go->scale.Set(1.5f, 1.5f, 1.5f);
-            go->mass = 125;
-            springOn = false;
-            m_ballCount++;
-        }
+		if (m_lives > 0)
+		{
+			if (m_ballCount < MAX_BALL)
+			{
+				GameObject *go = FetchGO();
+				go->type = GameObject::GO_BALL;
+				go->pos.Set(m_worldWidth * 0.6f, m_worldHeight * 0.2f, 0);
+				go->vel.Set(0, springEnergy, 0);
+				go->scale.Set(1.5f, 1.5f, 1.5f);
+				go->mass = 125;
+				springOn = false;
+				m_ballCount++;
+			}
+		}
     }
+	if (Application::IsKeyPressed(VK_BACK))
+	{
+		m_lives--;
+	}
     //Mouse Section
     static bool bLButtonState = false;
     if (!bLButtonState && Application::IsMousePressed(0))
@@ -905,6 +988,10 @@ void SceneAssignment2::Update(double dt)
 
     //Physics Simulation Section
     dt *= m_speed;
+	uiBallAngle += 100 * (float)dt;
+	bossAngle += 10 * (float)dt;
+	if (bossAngle > 36)
+		bossAngle = 0.f;
     /*if (counter)
     countTime += dt;*/
     for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -919,17 +1006,38 @@ void SceneAssignment2::Update(double dt)
 		}
         if (go->active)
         {
+			if (go->type == GameObject::GO_BOSS)
+			{
+			
+				Mtx44 bossRotate;
+				bossRotate.SetToRotation(bossAngle, 0, 0, 1);
+				go->normal = bossRotate * go->normal;
+
+				if (bossMove)
+				{
+					go->pos.x += 4 * (float)dt;
+					if (go->pos.x >= m_worldWidth * 0.44f)
+						bossMove = false;
+				}
+				else
+				{
+					go->pos.x -= 4 * (float)dt;
+					if (go->pos.x <= m_worldWidth * 0.45)
+						bossMove = true;
+				}
+			}
             if (go->type == GameObject::GO_BALL)
             {
                 if (go->pos.y < m_worldHeight * 0.1f)
                 {
                     m_ballCount--;
-           
+					m_lives--;
                     go->active = false;
                     if (m_ballCount < 1)
                     {
                         ballDead = true;
                     }
+					break;
                 }
 				if (go->pos.x < m_worldWidth * 0.57f)
 				{
@@ -938,14 +1046,7 @@ void SceneAssignment2::Update(double dt)
 				else gate = false;
 
             }
-
-            //Exercise 2a: Rebound game object at screen edges
-            //Exercise 2b: Unspawn if it really leave the screen
-            /*if (go->pos.x > m_worldWidth || go->pos.x < 0 || go->pos.y > m_worldHeight || go->pos.y < 0)
-            {
-            go->active = false;
-            --m_objectCount;
-            }*/
+            
             if ((go->pos.x > m_worldWidth - go->scale.x) && go->vel.x > 0 || go->pos.x < go->scale.x && go->vel.x < 0)
             {
                 go->vel.x = -go->vel.x;
@@ -1058,7 +1159,7 @@ void SceneAssignment2::RenderGO(GameObject *go)
         modelStack.PushMatrix();
         modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
         modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-        RenderMesh(meshList[GEO_BALL], false);
+        RenderMesh(meshList[GEO_BALL], true);
         modelStack.PopMatrix();
         break;
 
@@ -1126,6 +1227,28 @@ void SceneAssignment2::RenderGO(GameObject *go)
 
 		break;
 	}
+	case GameObject::GO_BOSS:
+	{
+		float degree = Math::RadianToDegree(atan2(go->normal.y, go->normal.x));
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		modelStack.Rotate(degree, 0, 0, 1);
+		RenderMesh(meshList[GEO_BOSS], true);
+		modelStack.PopMatrix();
+
+		break;
+	}
+	case GameObject::GO_MINION:
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_MINION], true);
+		modelStack.PopMatrix();
+		break;
+	}
 	case GameObject::GO_BLUEBALL:
 		//glBlendFunc(GL_ONE, GL_ONE);
 		glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
@@ -1147,8 +1270,7 @@ void SceneAssignment2::Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //Calculating aspect ratio
-    m_worldHeight = 100.f;
-    m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
+
 
     // Projection matrix : Orthographic Projection
     //Mtx44 projection;
@@ -1186,12 +1308,20 @@ void SceneAssignment2::Render()
             RenderGO(go);
         }
     }
-    {
-        std::ostringstream ss;
-        ss << "Score " << m_score;
-        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 3, 0, 9);
-    }
+	std::ostringstream ss;
 
+    {
+		ss.str(std::string());
+		ss.precision(5);
+        ss << "Score " << m_score;
+        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 8, 15, 50);
+    }
+	{
+		ss.str(std::string());
+		ss.precision(5);
+		ss << "Balls Left: ";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 2, 0, 9);
+	}
     for (int iter = 0; iter < m_lives; iter++)
     {
         glDisable(GL_DEPTH_TEST);
@@ -1204,7 +1334,8 @@ void SceneAssignment2::Render()
         viewStack.LoadIdentity();
         modelStack.PushMatrix();
         modelStack.LoadIdentity();
-        modelStack.Translate(0, 0, 1);
+        modelStack.Translate(2 + iter * 5, 5, 1);
+		modelStack.Rotate(uiBallAngle, 0, 1, 1);
         RenderMesh(meshList[GEO_BALL], true);
 
         modelStack.PopMatrix();
@@ -1212,6 +1343,34 @@ void SceneAssignment2::Render()
         projectionStack.PopMatrix();
         glEnable(GL_DEPTH_TEST);
     }
+	if (m_lives <= 0)
+	{
+		glDisable(GL_DEPTH_TEST);
+
+		Mtx44 ortho;
+		ortho.SetToOrtho(0, 80, 0, 60, -10, 10);
+		projectionStack.PushMatrix();
+		projectionStack.LoadMatrix(ortho);
+		viewStack.PushMatrix();
+		viewStack.LoadIdentity();
+		modelStack.PushMatrix();
+		modelStack.LoadIdentity();
+		modelStack.Translate(40, 30, 5);
+		modelStack.Scale(m_worldWidth * 0.7f, m_worldHeight* 0.7f, 1);
+		RenderMesh(meshList[GEO_BACKGROUND], false);
+
+		modelStack.PopMatrix();
+		viewStack.PopMatrix();
+		projectionStack.PopMatrix();
+		glEnable(GL_DEPTH_TEST);
+
+		{
+			ss.str(std::string());
+			ss.precision(5);
+			ss << "GAME OVER";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 9, 2, 25);
+		}
+	}
     //On screen text
     //std::ostringstream ss;
     //ss << "Object count: " << m_objectCount;

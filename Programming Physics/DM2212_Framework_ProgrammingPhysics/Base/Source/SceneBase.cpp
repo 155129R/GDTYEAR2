@@ -71,9 +71,9 @@ void SceneBase::Init()
 	glUseProgram(m_programID);
 
 	lights[0].type = Light::LIGHT_POINT;
-    lights[0].position.Set(0, 100, 0);
-    lights[0].color.Set(0.5f, 0.5f, 0.3f);
-    lights[0].power = 15.f;
+    lights[0].position.Set(1, 100, 1);
+    lights[0].color.Set(0.4f, 0.4f, 0.6f);
+    lights[0].power = 18.f;
     lights[0].kC = 1.f;
     lights[0].kL = 0.01f;
     lights[0].kQ = 0.001f;
@@ -104,6 +104,7 @@ void SceneBase::Init()
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
     meshList[GEO_CUBE] = MeshBuilder::GenerateCube("Quad", Color(0, 1, 0.7f), 1, 5, 1);
     meshList[GEO_CUBE]->textureID = LoadTGA("Image//wall.tga");
+	meshList[GEO_CUBE]->material.kAmbient.Set(0.7f, 0.7f, 0.7f);
     meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(0.5f, 0.5f, 0.5f), 10, 10, 1.f);
     meshList[GEO_BALL]->material.kAmbient.Set(0.4f, 0.4f, 0.4f);
     meshList[GEO_BALL]->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
@@ -118,8 +119,8 @@ void SceneBase::Init()
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
     meshList[GEO_PLANE] = MeshBuilder::GenerateQuad("plane", Color(1, 1, 1), 1.f, 4, 4);
     meshList[GEO_PLANE]->textureID = LoadTGA("Image//space.tga");
-    meshList[GEO_MINION] = MeshBuilder::GenerateQuad("minion ship", Color(1, 1, 1), 1.f);
-    meshList[GEO_MINION]->textureID = LoadTGA("Image//min_Ship.tga");
+    meshList[GEO_MINION] = MeshBuilder::GenerateOBJ("minio", "OBJ\\ghost.obj");
+	meshList[GEO_MINION]->textureID = LoadTGA("Image//dragon.tga");
     meshList[GEO_CHARGE] = MeshBuilder::GenerateQuad("charge", Color(0, 0.6f, 1), 1.f);
     meshList[GEO_HEALTH] = MeshBuilder::GenerateQuad("Health", Color(1, 0, 0), 1.f);
     meshList[GEO_STATION] = MeshBuilder::GenerateQuad("station", Color(1, 1, 1), 1.f);
@@ -134,8 +135,8 @@ void SceneBase::Init()
     meshList[GEO_MISSILE]->textureID = LoadTGA("Image//missile.tga");
 	meshList[GEO_BOOST] = MeshBuilder::GenerateQuad("BOOST", Color(1, 1, 1), 1.f);
 	meshList[GEO_BOOST]->textureID = LoadTGA("Image//boost.tga");
-    meshList[GEO_BOSS] = MeshBuilder::GenerateQuad("BOSS", Color(1, 1, 1), 1.f);
-    meshList[GEO_BOSS]->textureID = LoadTGA("Image//boss.tga");
+    meshList[GEO_BOSS] = MeshBuilder::GenerateOBJ("BOSS","OBJ\\boss.obj");
+    meshList[GEO_BOSS]->textureID = LoadTGA("Image//dragon.tga");
     meshList[GEO_MENU] = MeshBuilder::GenerateQuad("plane", Color(1, 1, 1), 1.f, 1, 1);
     meshList[GEO_MENU]->textureID = LoadTGA("Image//menu2.tga");
     meshList[GEO_FLIPPER] = MeshBuilder::GenerateCube("FLIPPER", Color(0.3, 0.2, 0.5f));

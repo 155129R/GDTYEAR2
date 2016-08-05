@@ -59,6 +59,9 @@ protected:
     int m_lives;
     bool ballDead;
 	bool gate;
+	float uiBallAngle;
+	float bossAngle;
+	bool bossMove;
 	GameObject *gateGO;
 };
 
