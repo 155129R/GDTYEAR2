@@ -63,6 +63,8 @@ protected:
 	float bossAngle;
 	bool bossMove;
 	GameObject *gateGO;
+    bool startGame;
+    int triggerCount;
 };
 
 #endif

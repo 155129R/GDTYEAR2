@@ -40,11 +40,14 @@ void SceneAssignment2::Init()
 	gate = true;
 	uiBallAngle = 0.f;
 	bossAngle = 0.f;
-//    PlaySound(TEXT("8bit.wav"), NULL, SND_ASYNC | SND_LOOP);
+
 
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
+    triggerCount = 0;
+
+    startGame = false;
 }
 
 void SceneAssignment2::worldInit()
@@ -579,6 +582,8 @@ void SceneAssignment2::CollisionResponse(GameObject *go1, GameObject *go2, float
 								Vector3 u1n = (u1.Dot(N) * N);
 								go1->vel = (u1 - 2 * u1n);
                                 m_score += 1;
+                                PlaySound(TEXT("chime.wav"), NULL, SND_ASYNC);
+
                                 break;
     }
 	case GameObject::GO_BOSS:
@@ -588,6 +593,8 @@ void SceneAssignment2::CollisionResponse(GameObject *go1, GameObject *go2, float
 		Vector3 u1n = (u1.Dot(N) * N);
 		go1->vel = (u1 - 2 * u1n);
 		m_score += 4;
+        PlaySound(TEXT("laugh.wav"), NULL, SND_ASYNC);
+
 		break;
 	}
 	case GameObject::GO_MINION:
@@ -597,6 +604,8 @@ void SceneAssignment2::CollisionResponse(GameObject *go1, GameObject *go2, float
 		Vector3 u1n = (u1.Dot(N) * N);
 		go1->vel = (u1 - 2 * u1n);
 		m_score += 2;
+        PlaySound(TEXT("monster.wav"), NULL, SND_ASYNC);
+        triggerCount++;
 		break;
 	}
     case GameObject::GO_WALL:
@@ -677,430 +686,461 @@ void SceneAssignment2::Update(double dt)
     
     SceneBase::Update(dt);
     shouldUpdate = true;
+    if (startGame)
+    {
 
-    if (Application::IsKeyPressed('9'))
-    {
-        m_speed = Math::Max(0.f, m_speed - 0.1f);
-    }
-    if (Application::IsKeyPressed('0'))
-    {
-        m_speed += 0.1f;
-    }
+        if (Application::IsKeyPressed('9'))
+        {
+            m_speed = Math::Max(0.f, m_speed - 0.1f);
+        }
+        if (Application::IsKeyPressed('0'))
+        {
+            m_speed += 0.1f;
+        }
 
 
-    for (int i = 0; i <= 8; i++)
-    {
-        float angle = 360 / 8;
-    }
-   // std::cout << springEnergy << std::endl;
-    if (springOn == true)
-    {
-        if (springEnergy < 80)
-            springEnergy += 40 * (float)dt;
-    }
-    else
-    {
+        for (int i = 0; i <= 8; i++)
+        {
+            float angle = 360 / 8;
+        }
+        // std::cout << springEnergy << std::endl;
+        if (springOn == true)
+        {
+            if (springEnergy < 80)
+                springEnergy += 40 * (float)dt;
+        }
+        else
+        {
             springEnergy = 30;
-    }
-    static bool bSpacebutton = false;
-    if (!bSpacebutton && Application::IsKeyPressed(VK_SPACE))
-    {
-        bSpacebutton = true;
-        springOn = true;
-    }
-    else if (bSpacebutton && !Application::IsKeyPressed(VK_SPACE))
-    {
-        bSpacebutton = false;
-		if (m_lives > 0)
-		{
-			if (m_ballCount < MAX_BALL)
-			{
-				GameObject *go = FetchGO();
-				go->type = GameObject::GO_BALL;
-				go->pos.Set(m_worldWidth * 0.6f, m_worldHeight * 0.2f, 0);
-				go->vel.Set(0, springEnergy, 0);
-				go->scale.Set(1.5f, 1.5f, 1.5f);
-				go->mass = 125;
-				springOn = false;
-				m_ballCount++;
-			}
-		}
-    }
-	if (Application::IsKeyPressed(VK_BACK))
-	{
-		m_lives--;
-	}
-    //Mouse Section
-    static bool bLButtonState = false;
-    if (!bLButtonState && Application::IsMousePressed(0))
-    {
-        bLButtonState = true;
-        std::cout << "LBUTTON DOWN" << std::endl;
+        }
+        static bool bSpacebutton = false;
+        if (!bSpacebutton && Application::IsKeyPressed(VK_SPACE))
+        {
+            bSpacebutton = true;
+            springOn = true;
+        }
+        else if (bSpacebutton && !Application::IsKeyPressed(VK_SPACE))
+        {
+            bSpacebutton = false;
+            if (m_lives > 0)
+            {
+                if (m_ballCount < MAX_BALL)
+                {
+                    GameObject *go = FetchGO();
+                    go->type = GameObject::GO_BALL;
+                    go->pos.Set(m_worldWidth * 0.6f, m_worldHeight * 0.2f, 0);
+                    go->vel.Set(0, springEnergy, 0);
+                    go->scale.Set(1.5f, 1.5f, 1.5f);
+                    go->mass = 125;
+                    springOn = false;
+                    m_ballCount++;
+                }
+            }
+        }
+        if (Application::IsKeyPressed(VK_BACK))
+        {
+//            m_lives--;
+ //           triggerCount = 2;
+        }
+        //Mouse Section
+        //static bool bLButtonState = false;
+        //if (!bLButtonState && Application::IsMousePressed(0))
+        //{
+        //    bLButtonState = true;
+        //    std::cout << "LBUTTON DOWN" << std::endl;
 
-        double x, y;
-        Application::GetCursorPos(&x, &y);
-        int w = Application::GetWindowWidth();
-        int h = Application::GetWindowHeight();
-        float posX = static_cast<float>(x) / w * m_worldWidth;
-        float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
-        /*float posX = m_worldWidth * 0.5f;
-        float posY = 5.f/100.f * m_worldHeight;*/
+        //    double x, y;
+        //    Application::GetCursorPos(&x, &y);
+        //    int w = Application::GetWindowWidth();
+        //    int h = Application::GetWindowHeight();
+        //    float posX = static_cast<float>(x) / w * m_worldWidth;
+        //    float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
+        //    /*float posX = m_worldWidth * 0.5f;
+        //    float posY = 5.f/100.f * m_worldHeight;*/
 
-        m_ghost->pos.Set(posX, posY, 0); //IMPT
-        m_ghost->active = true;
-        float sc = 2;
-        m_ghost->scale.Set(sc, sc, sc);
-    }
-    else if (bLButtonState && !Application::IsMousePressed(0))
-    {
-        bLButtonState = false;
-        std::cout << "LBUTTON UP" << std::endl;
+        //    m_ghost->pos.Set(posX, posY, 0); //IMPT
+        //    m_ghost->active = true;
+        //    float sc = 2;
+        //    m_ghost->scale.Set(sc, sc, sc);
+        //}
+        //else if (bLButtonState && !Application::IsMousePressed(0))
+        //{
+        //    bLButtonState = false;
+        //    std::cout << "LBUTTON UP" << std::endl;
 
-        //spawn small GO_BALL
-        GameObject *go = FetchGO();
-        go->active = true;
-        go->type = GameObject::GO_BALL;
-        double x, y;
-        Application::GetCursorPos(&x, &y);
-        int w = Application::GetWindowWidth();
-        int h = Application::GetWindowHeight();
-        float posX = static_cast<float>(x) / w * m_worldWidth;
-        float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
+        //    //spawn small GO_BALL
+        //    GameObject *go = FetchGO();
+        //    go->active = true;
+        //    go->type = GameObject::GO_BALL;
+        //    double x, y;
+        //    Application::GetCursorPos(&x, &y);
+        //    int w = Application::GetWindowWidth();
+        //    int h = Application::GetWindowHeight();
+        //    float posX = static_cast<float>(x) / w * m_worldWidth;
+        //    float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
 
-        go->pos = m_ghost->pos;
-        go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
-        m_ghost->active = false;
-        float sc = 1.5f;
-        go->scale.Set(sc, sc, sc);
-        go->mass = sc * sc * sc;
+        //    go->pos = m_ghost->pos;
+        //    go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
+        //    m_ghost->active = false;
+        //    float sc = 1.5f;
+        //    go->scale.Set(sc, sc, sc);
+        //    go->mass = sc * sc * sc;
 
 
-        countTime = 0;
-        m_collisionTime = -1;
+        //    countTime = 0;
+        //    m_collisionTime = -1;
+        //    for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+        //    {
+        //        GameObject *go2 = (GameObject *)*it;
+        //        if (go2->active && go != go2)
+        //        {
+        //            float t = CheckCollision2(go, go2);
+        //            if (t > 0 && t <= dt)
+        //            {
+        //                m_collisionTime = t;
+        //            }
+        //        }
+        //    }
+        //}
+        //static bool bRButtonState = false;
+        //if (!bRButtonState && Application::IsMousePressed(1))
+        //{
+        //    bRButtonState = true;
+        //    std::cout << "RBUTTON DOWN" << std::endl;
+
+        //    double x, y;
+        //    Application::GetCursorPos(&x, &y);
+        //    int w = Application::GetWindowWidth();
+        //    int h = Application::GetWindowHeight();
+        //    float posX = static_cast<float>(x) / w * m_worldWidth;
+        //    float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
+
+        //    m_ghost->pos.Set(posX, posY, 0); //IMPT
+        //    m_ghost->active = true;
+        //    float sc = 3;
+        //    m_ghost->scale.Set(sc, sc, sc);
+        //}
+        //else if (bRButtonState && !Application::IsMousePressed(1))
+        //{
+        //    bRButtonState = false;
+        //    std::cout << "RBUTTON UP" << std::endl;
+
+        //    //spawn large GO_BALL
+        //    GameObject *go = FetchGO();
+        //    go->active = true;
+        //    go->type = GameObject::GO_BALL;
+        //    double x, y;
+        //    Application::GetCursorPos(&x, &y);
+        //    int w = Application::GetWindowWidth();
+        //    int h = Application::GetWindowHeight();
+        //    float posX = static_cast<float>(x) / w * m_worldWidth;
+        //    float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
+
+        //    go->pos = m_ghost->pos;
+        //    go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
+        //    //float sc = 3;
+        //    go->scale = m_ghost->scale;
+        //    go->mass = m_ghost->scale.x * m_ghost->scale.x * m_ghost->scale.x;
+        //    m_ghost->active = false;
+        //}
+
+        //if (m_ghost->active && bRButtonState)
+        //{
+        //    double x, y;
+        //    Application::GetCursorPos(&x, &y);
+        //    int w = Application::GetWindowWidth();
+        //    int h = Application::GetWindowHeight();
+        //    float posX = static_cast<float>(x) / w * m_worldWidth;
+        //    float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
+
+        //    float size = (m_ghost->pos - Vector3(x, y, 0)).Length();
+        //    size = Math::Clamp(size, 2.0f, 10.0f);
+        //    m_ghost->scale.Set(size, size, size);
+        //}
+
+        if (Application::IsKeyPressed('R'))
+        {
+            for (auto go : m_goList)
+            {
+                if (go->type == GameObject::GO_BALL && go->active)
+                {
+                    go->active = false;
+                    m_objectCount--;
+                    m_ballCount--;
+                    m_lives = 3;
+                    m_score = 0;
+                }
+            }
+        }
+        static bool bNButtonState = false;
+        if (!bNButtonState && Application::IsKeyPressed('N'))
+        {
+            bNButtonState = true;
+            for (auto go : m_goList)
+            {
+                if (go->type != GameObject::GO_BALL && go->active)
+                {
+                    nudgeDisplacement = 40 * (float)dt;
+                    go->pos = go->pos + nudgeDisplacement;
+                }
+                if (go->type == GameObject::GO_BALL && go->active)
+                {
+                    go->vel += (Math::RandFloatMinMax(-10, 10), Math::RandFloatMinMax(-10, 10), Math::RandFloatMinMax(-10, 10));
+                }
+            }
+        }
+        if (bNButtonState && !(Application::IsKeyPressed('N')))
+        {
+            bNButtonState = false;
+            for (auto go : m_goList)
+            {
+                if (go->type != GameObject::GO_BALL && go->active)
+                {
+                    go->pos -= nudgeDisplacement;
+                }
+            }
+            nudgeDisplacement = (0, 0, 0);
+        }
+        static bool aButtonState = false;
+        if (!aButtonState && Application::IsKeyPressed('A'))
+        {
+            leftFlipper = true;
+            aButtonState = true;
+        }
+        if (aButtonState && !Application::IsKeyPressed('A'))
+        {
+            leftFlipper = false;
+            aButtonState = false;
+        }
+        if (leftFlipper)
+        {
+            Mtx44 flippy;
+            flippy.SetToRotation(145, 0, 0, 1);
+            for (auto go : m_goList)
+            {
+                if (go->type == GameObject::GO_LEFTFLIPPER && go->active)
+                {
+                    //std::cout << go->normal << std::endl;
+                    if (go->normal.y > 0.5)
+                    {
+
+                        go->normal += flippy * go->normal * (20 * (float)dt);
+                        go->pos.y += 20 * (float)dt;
+                    }
+                    go->swingAngle = Math::RadianToDegree(leftdefPos.Dot(go->pos - (go->scale * 0.1f)));
+
+                }
+            }
+        }
+        else
+        {
+            Mtx44 flippy;
+            flippy.SetToRotation(145, 0, 0, 1);
+            for (auto go : m_goList)
+            {
+                if (go->type == GameObject::GO_LEFTFLIPPER && go->active)
+                {
+                    if (go->normal.y < 1)
+                    {
+                        go->normal = leftNormal;
+                        go->pos = leftdefPos;
+                    }
+                    go->swingAngle = 0;
+                }
+            }
+        }
+
+        static bool dButtonState = false;
+        if (!dButtonState && Application::IsKeyPressed('D'))
+        {
+            rightFlipper = true;
+            dButtonState = true;
+        }
+        if (dButtonState && !Application::IsKeyPressed('D'))
+        {
+            rightFlipper = false;
+            dButtonState = false;
+
+        }
+        if (rightFlipper)
+        {
+            Mtx44 flippy;
+            flippy.SetToRotation(-145, 0, 0, 1);
+            for (auto go : m_goList)
+            {
+                if (go->type == GameObject::GO_RIGHTFLIPPER && go->active)
+                {
+
+                    if (go->normal.y > 0.5)
+                    {
+                        go->normal += flippy * go->normal * (10 * (float)dt);
+                        go->pos.y += 5 * (float)dt;
+                    }
+                    go->swingAngle = Math::RadianToDegree(rightdefPos.Dot(go->pos + (go->scale * 0.1f)));
+                }
+            }
+        }
+        else
+        {
+            Mtx44 flippy;
+            flippy.SetToRotation(145, 0, 0, 1);
+            for (auto go : m_goList)
+            {
+                if (go->type == GameObject::GO_RIGHTFLIPPER && go->active)
+                {
+
+                    if (go->normal.y < 1)
+                    {
+                        go->normal = rightNormal;
+                        go->pos = rightdefPos;
+                    }
+                    go->swingAngle = 0;
+
+                }
+            }
+        }
+
+        //Physics Simulation Section
+        dt *= m_speed;
+        uiBallAngle += 100 * (float)dt;
+        bossAngle += 10 * (float)dt;
+        if (bossAngle > 36)
+            bossAngle = 0.f;
+        if (m_lives <= 0)
+            PlaySound(TEXT("laugh.wav"), NULL, SND_SYNC);
+        if (triggerCount >= 2)
+        {
+            triggerCount = 0;
+            if (m_ballCount < 2)
+            {
+
+                GameObject *go = FetchGO();
+                go->type = GameObject::GO_BALL;
+                go->pos.Set(m_worldWidth * 0.6f, m_worldHeight * 0.2f, 0);
+                go->vel.Set(0, 50, 0);
+                go->scale.Set(1.5f, 1.5f, 1.5f);
+                go->mass = 125;
+                springOn = false;
+                m_ballCount++;
+                m_lives++;
+
+            }
+        }
+        /*if (counter)
+        countTime += dt;*/
         for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
         {
-            GameObject *go2 = (GameObject *)*it;
-            if (go2->active && go != go2)
+            GameObject *go = (GameObject *)*it;
+            if (go->type == GameObject::GO_GATE)
             {
-                float t = CheckCollision2(go, go2);
-                if (t > 0 && t <= dt)
-                {
-                    m_collisionTime = t;
-                }
-            }
-        }
-    }
-    static bool bRButtonState = false;
-    if (!bRButtonState && Application::IsMousePressed(1))
-    {
-        bRButtonState = true;
-        std::cout << "RBUTTON DOWN" << std::endl;
-
-        double x, y;
-        Application::GetCursorPos(&x, &y);
-        int w = Application::GetWindowWidth();
-        int h = Application::GetWindowHeight();
-        float posX = static_cast<float>(x) / w * m_worldWidth;
-        float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
-
-        m_ghost->pos.Set(posX, posY, 0); //IMPT
-        m_ghost->active = true;
-        float sc = 3;
-        m_ghost->scale.Set(sc, sc, sc);
-    }
-    else if (bRButtonState && !Application::IsMousePressed(1))
-    {
-        bRButtonState = false;
-        std::cout << "RBUTTON UP" << std::endl;
-
-        //spawn large GO_BALL
-        GameObject *go = FetchGO();
-        go->active = true;
-        go->type = GameObject::GO_BALL;
-        double x, y;
-        Application::GetCursorPos(&x, &y);
-        int w = Application::GetWindowWidth();
-        int h = Application::GetWindowHeight();
-        float posX = static_cast<float>(x) / w * m_worldWidth;
-        float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
-
-        go->pos = m_ghost->pos;
-        go->vel.Set(m_ghost->pos.x - posX, m_ghost->pos.y - posY, 0);
-        //float sc = 3;
-        go->scale = m_ghost->scale;
-        go->mass = m_ghost->scale.x * m_ghost->scale.x * m_ghost->scale.x;
-        m_ghost->active = false;
-    }
-
-    if (m_ghost->active && bRButtonState)
-    {
-        double x, y;
-        Application::GetCursorPos(&x, &y);
-        int w = Application::GetWindowWidth();
-        int h = Application::GetWindowHeight();
-        float posX = static_cast<float>(x) / w * m_worldWidth;
-        float posY = (h - static_cast<float>(y)) / h * m_worldHeight;
-
-        float size = (m_ghost->pos - Vector3(x, y, 0)).Length();
-        size = Math::Clamp(size, 2.0f, 10.0f);
-        m_ghost->scale.Set(size, size, size);
-    }
-
-    if (Application::IsKeyPressed('R'))
-    {
-        for (auto go : m_goList)
-        {
-            if (go->type == GameObject::GO_BALL && go->active)
-            {
-                go->active = false;
-                m_objectCount--;
-                m_ballCount--;
-            }
-        }
-    }
-    static bool bNButtonState = false;
-    if (!bNButtonState && Application::IsKeyPressed('N'))
-    {
-        bNButtonState = true;
-        for (auto go : m_goList)
-        {
-            if (go->type != GameObject::GO_BALL && go->active)
-            {
-                nudgeDisplacement = 40 * (float)dt;
-                go->pos = go->pos + nudgeDisplacement;
-            }
-            if (go->type == GameObject::GO_BALL && go->active)
-            {
-                go->vel += (Math::RandFloatMinMax(-10, 10), Math::RandFloatMinMax(-10, 10), Math::RandFloatMinMax(-10, 10));
-            }
-        }
-    }
-    if (bNButtonState && !(Application::IsKeyPressed('N')))
-    {
-        bNButtonState = false;
-        for (auto go : m_goList)
-        {
-            if (go->type != GameObject::GO_BALL && go->active)
-            {
-                go->pos -= nudgeDisplacement;
-            }
-        }
-        nudgeDisplacement = (0,0,0);
-    }
-    static bool aButtonState = false;
-    if (!aButtonState && Application::IsKeyPressed('A'))
-    {
-        leftFlipper = true;
-        aButtonState = true;
-    }
-    if (aButtonState && !Application::IsKeyPressed('A'))
-    {
-        leftFlipper = false;
-        aButtonState = false;
-    }
-    if (leftFlipper)
-    {
-        Mtx44 flippy;
-        flippy.SetToRotation(145, 0, 0, 1);
-        for (auto go : m_goList)
-        {
-            if (go->type == GameObject::GO_LEFTFLIPPER && go->active)
-            {
-                //std::cout << go->normal << std::endl;
-                if (go->normal.y > 0.5)
-                {
-
-                    go->normal += flippy * go->normal * (20 * (float)dt);
-                    go->pos.y += 20 * (float)dt;
-                }
-                go->swingAngle = Math::RadianToDegree(leftdefPos.Dot(go->pos - (go->scale * 0.1f)));
-
-            }
-        }
-    }
-    else
-    {
-        Mtx44 flippy;
-        flippy.SetToRotation(145, 0, 0, 1);
-        for (auto go : m_goList)
-        {
-            if (go->type == GameObject::GO_LEFTFLIPPER && go->active)
-            {
-                if (go->normal.y < 1)
-                {
-                    go->normal = leftNormal;
-                    go->pos = leftdefPos;
-                }
-                go->swingAngle = 0;
-            }
-        }
-    }
-
-    static bool dButtonState = false;
-    if (!dButtonState && Application::IsKeyPressed('D'))
-    {
-        rightFlipper = true;
-        dButtonState = true;
-    }
-    if (dButtonState && !Application::IsKeyPressed('D'))
-    {
-        rightFlipper = false;
-        dButtonState = false;
-
-    }
-    if (rightFlipper)
-    {
-        Mtx44 flippy;
-        flippy.SetToRotation(-145, 0, 0, 1);
-        for (auto go : m_goList)
-        {
-            if (go->type == GameObject::GO_RIGHTFLIPPER && go->active)
-            {
-
-                if (go->normal.y > 0.5)
-                {
-                    go->normal += flippy * go->normal * (10 * (float)dt);
-                    go->pos.y += 5 * (float)dt;
-                }
-                go->swingAngle = Math::RadianToDegree(rightdefPos.Dot(go->pos + (go->scale * 0.1f)));
-            }
-        }
-    }
-    else
-    {
-        Mtx44 flippy;
-        flippy.SetToRotation(145, 0, 0, 1);
-        for (auto go : m_goList)
-        {
-            if (go->type == GameObject::GO_RIGHTFLIPPER && go->active)
-            {
-
-                if (go->normal.y < 1)
-                {
-                    go->normal = rightNormal;
-                    go->pos = rightdefPos;
-                }
-                go->swingAngle = 0;
-
-            }
-        }
-    }
-
-    //Physics Simulation Section
-    dt *= m_speed;
-	uiBallAngle += 100 * (float)dt;
-	bossAngle += 10 * (float)dt;
-	if (bossAngle > 36)
-		bossAngle = 0.f;
-    /*if (counter)
-    countTime += dt;*/
-    for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-    {
-        GameObject *go = (GameObject *)*it;
-		if (go->type == GameObject::GO_GATE)
-		{
-			if (gate == true)
-				go->active = true;
-			else if (gate == false)
-				go->active = false;
-		}
-        if (go->active)
-        {
-			if (go->type == GameObject::GO_BOSS)
-			{
-			
-				Mtx44 bossRotate;
-				bossRotate.SetToRotation(bossAngle, 0, 0, 1);
-				go->normal = bossRotate * go->normal;
-
-				if (bossMove)
-				{
-					go->pos.x += 4 * (float)dt;
-					if (go->pos.x >= m_worldWidth * 0.44f)
-						bossMove = false;
-				}
-				else
-				{
-					go->pos.x -= 4 * (float)dt;
-					if (go->pos.x <= m_worldWidth * 0.45)
-						bossMove = true;
-				}
-			}
-            if (go->type == GameObject::GO_BALL)
-            {
-                if (go->pos.y < m_worldHeight * 0.1f)
-                {
-                    m_ballCount--;
-					m_lives--;
+                if (gate == true)
+                    go->active = true;
+                else if (gate == false)
                     go->active = false;
-                    if (m_ballCount < 1)
-                    {
-                        ballDead = true;
-                    }
-					break;
-                }
-				if (go->pos.x < m_worldWidth * 0.57f)
-				{
-					gate = true;
-				}
-				else gate = false;
-
             }
-            
-            if ((go->pos.x > m_worldWidth - go->scale.x) && go->vel.x > 0 || go->pos.x < go->scale.x && go->vel.x < 0)
-            {
-                go->vel.x = -go->vel.x;
-            }
-            if (go->pos.y > m_worldHeight - go->scale.y || go->pos.y < go->scale.y)
-            {
-                go->vel.y = -go->vel.y;
-            }
-
-            if (go->pos.x > m_worldWidth + 20 || go->pos.x < -20 || go->pos.y > m_worldWidth + 20 || go->pos.y < -20)
-            {
-                go->active = false;
-                --m_objectCount;
-            }
-
-            for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
-            {
-                GameObject *go2 = static_cast<GameObject *>(*it2);
-                if (!go2->active)
-                    continue;
-                GameObject *goA = go, *goB = go2;
-                if (go->type != GameObject::GO_BALL)
-                {
-                    if (go2->type != GameObject::GO_BALL)
-                        continue;
-                    goA = go2;
-                    goB = go;
-                }
-                if (CheckCollision(goA, goB, dt))
-                {
-                    if (go->type == GameObject::GO_BALL && (go2->type == GameObject::GO_WALL || go2->type == GameObject::GO_LEFTFLIPPER || go2->type == GameObject::GO_RIGHTFLIPPER))
-                    {
-                        go2->swingAngle = 0.0;
-                        shouldUpdate = false;
-                    }
-                    CollisionResponse(goA, goB, dt);
-                    //Exercise 3: audit kinetic energy
-                }
-            }
-        }
-        if (shouldUpdate)
-        {
             if (go->active)
             {
+                if (go->type == GameObject::GO_BOSS)
+                {
+
+                    Mtx44 bossRotate;
+                    bossRotate.SetToRotation(bossAngle, 0, 0, 1);
+                    go->normal = bossRotate * go->normal;
+
+                    if (bossMove)
+                    {
+                        go->pos.x += 4 * (float)dt;
+                        if (go->pos.x >= m_worldWidth * 0.44f)
+                            bossMove = false;
+                    }
+                    else
+                    {
+                        go->pos.x -= 4 * (float)dt;
+                        if (go->pos.x <= m_worldWidth * 0.45)
+                            bossMove = true;
+                    }
+                }
                 if (go->type == GameObject::GO_BALL)
                 {
-                    go->vel += (m_gravity * (float)dt) * 0.8f;
+                    if (go->pos.y < m_worldHeight * 0.1f)
+                    {
+                        m_ballCount--;
+                        m_lives--;
+                        go->active = false;
+                        if (m_ballCount < 1)
+                        {
+                            ballDead = true;
+                        }
+                        break;
+                    }
+                    if (go->pos.x < m_worldWidth * 0.57f)
+                    {
+                        gate = true;
+                    }
+                    else gate = false;
 
-                    //std::cout << go->vel << std::endl;
+                }
+
+                if ((go->pos.x > m_worldWidth - go->scale.x) && go->vel.x > 0 || go->pos.x < go->scale.x && go->vel.x < 0)
+                {
+                    go->vel.x = -go->vel.x;
+                }
+                if (go->pos.y > m_worldHeight - go->scale.y || go->pos.y < go->scale.y)
+                {
+                    go->vel.y = -go->vel.y;
+                }
+
+                if (go->pos.x > m_worldWidth + 20 || go->pos.x < -20 || go->pos.y > m_worldWidth + 20 || go->pos.y < -20)
+                {
+                    go->active = false;
+                    --m_objectCount;
+                }
+
+                for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
+                {
+                    GameObject *go2 = static_cast<GameObject *>(*it2);
+                    if (!go2->active)
+                        continue;
+                    GameObject *goA = go, *goB = go2;
+                    if (go->type != GameObject::GO_BALL)
+                    {
+                        if (go2->type != GameObject::GO_BALL)
+                            continue;
+                        goA = go2;
+                        goB = go;
+                    }
+                    if (CheckCollision(goA, goB, dt))
+                    {
+                        if (go->type == GameObject::GO_BALL && (go2->type == GameObject::GO_WALL || go2->type == GameObject::GO_LEFTFLIPPER || go2->type == GameObject::GO_RIGHTFLIPPER))
+                        {
+                            go2->swingAngle = 0.0;
+                            shouldUpdate = false;
+                        }
+                        CollisionResponse(goA, goB, dt);
+                        //Exercise 3: audit kinetic energy
+                    }
                 }
             }
-        }
-        go->pos += go->vel * static_cast<float>(dt);
+            if (shouldUpdate)
+            {
+                if (go->active)
+                {
+                    if (go->type == GameObject::GO_BALL)
+                    {
+                        go->vel += (m_gravity * (float)dt) * 0.8f;
 
+                        //std::cout << go->vel << std::endl;
+                    }
+                }
+            }
+            go->pos += go->vel * static_cast<float>(dt);
+
+        }
+    }
+    else
+    {
+        if (Application::IsKeyPressed(VK_RETURN))
+            startGame = true;
     }
 }
 
@@ -1314,7 +1354,7 @@ void SceneAssignment2::Render()
 		ss.str(std::string());
 		ss.precision(5);
         ss << "Score " << m_score;
-        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 8, 15, 50);
+        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 8, 5, 50);
     }
 	{
 		ss.str(std::string());
@@ -1343,6 +1383,52 @@ void SceneAssignment2::Render()
         projectionStack.PopMatrix();
         glEnable(GL_DEPTH_TEST);
     }
+    if (!startGame)
+    {
+        glDisable(GL_DEPTH_TEST);
+
+        Mtx44 ortho;
+        ortho.SetToOrtho(0, 80, 0, 60, -10, 10);
+        projectionStack.PushMatrix();
+        projectionStack.LoadMatrix(ortho);
+        viewStack.PushMatrix();
+        viewStack.LoadIdentity();
+        modelStack.PushMatrix();
+        modelStack.LoadIdentity();
+        modelStack.Translate(40, 30, 5);
+        modelStack.Scale(m_worldWidth * 0.7f, m_worldHeight* 0.7f, 1);
+        RenderMesh(meshList[GEO_BACKGROUND], false);
+
+        modelStack.PopMatrix();
+        viewStack.PopMatrix();
+        projectionStack.PopMatrix();
+        glEnable(GL_DEPTH_TEST);
+
+        {
+            ss.str(std::string());
+            ss.precision(5);
+            ss << "Press ENTER to start";
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 4, 2, 25);
+        }
+        {
+            ss.str(std::string());
+            ss.precision(5);
+            ss << "Space to launch ball";
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 2, 2, 20);
+        }
+        {
+            ss.str(std::string());
+            ss.precision(5);
+            ss << "A and D for flippers";
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 2, 2, 15);
+        }
+        {
+            ss.str(std::string());
+            ss.precision(5);
+            ss << "N for nudge";
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 2, 2, 10);
+        }
+    }
 	if (m_lives <= 0)
 	{
 		glDisable(GL_DEPTH_TEST);
@@ -1370,6 +1456,12 @@ void SceneAssignment2::Render()
 			ss << "GAME OVER";
 			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 9, 2, 25);
 		}
+        {
+            ss.str(std::string());
+            ss.precision(5);
+            ss << "Your score: " <<m_score;
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0), 2, 2, 15);
+        }
 	}
     //On screen text
     //std::ostringstream ss;
