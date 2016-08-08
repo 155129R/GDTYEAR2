@@ -1,0 +1,42 @@
+Bomber,3,Common,Troop,Ground,150,100
+Archers,3,Common,Troop,AG,125,40
+Knight,3,Common,Troop,Ground,600,75
+Mini P.E.K.K.A,4,Rare,Troop,Ground,580,325
+Musketeer,5,Rare,Troop,AG,340,120
+Giant,5,Rare,Troop,Buildings,1900,120
+Prince,5,Epic,Troop,Ground,1150,220
+Baby Dragon,4,Epic,Troop,AG,800,100
+Skeleton Army,4,Epic,Troop,Ground,27,27
+Witch,5,Epic,Troop,AG,500,35
+Spear Goblins,2,Common,Troop,AG,52,24
+Goblins,2,Common,Troop,Ground,80,50
+Valkyrie,4,Rare,Troop,Ground,800,110
+Skeletons,1,Common,Troop,Ground,27,27
+Minions,3,Common,Troop,AG,90,40
+Giant Skeleton,6,Epic,Troop,Ground,1800,100
+Balloon,5,Epic,Troop,Buildings,1000,600
+Barbarians,5,Common,Troop,Ground,310,75
+Minion Horde,5,Common,Troop,AG,90,40
+Hog Rider,4,Rare,Troop,Buildings,800,160
+P.E.K.K.A,8,Epic,Troop,Ground,3000,450
+Wizard,5,Rare,Troop,AG,340,140
+Golem,8,Epic,Troop,Buildings,2200,130
+Arrows,3,Common,Spell,AG,-1,120
+Fireball,4,Rare,Spell,AG,-1,325
+Lightning,6,Epic,Spell,AG,-1,650
+Goblin Barrel,4,Epic,Spell,Ground,-1,50
+Rocket,6,Rare,Spell,AG,-1,700
+Rage,3,Epic,Spell,NA,-1,-1
+Freeze,4,Epic,Spell,AG,-1,-1
+Zap,2,Common,Spell,AG,-1,80
+Mirror,-1,Epic,Spell,NA,-1,-1
+Goblin Hut,5,Rare,Building,NA,700,-1
+Tombstone,3,Rare,Building,NA,200,-1
+Barbarian Hut,7,Rare,Building,NA,1000,-1
+Bomb Tower,5,Rare,Building,Ground,900,100
+Cannon,6,Common,Building,Ground,1000,60
+X-Bow,6,Epic,Building,AG,1000,20
+Tesla,4,Common,Building,AG,420,60
+Inferno Tower,5,Rare,Building,AG,850,400
+Mortar Tower,6,Common,Building,Ground,600,200
+Elixir Collector,5,Rare,Building,NA,800,-1
