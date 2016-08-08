@@ -142,7 +142,7 @@ CCard::CCard(string data)
 	temp = "";
 }
 
-ostream& operator<<(ostream os, const CCard& card)
+ostream& operator<<(ostream& os, CCard& card)
 {
 	os << card.getCardName() << ", " << card.getElixirCost() << ", ";
 	switch (card.getRarityValue())
@@ -178,4 +178,33 @@ ostream& operator<<(ostream os, const CCard& card)
 	}
 	os << ", " << card.getHitpoints() << ", " << card.getDamage();
 	return os;
+}
+
+string CCard::getCardName()
+{
+	return this->m_strCardName;
+}
+int CCard::getElixirCost()
+{
+	return this->m_iElixirCost;
+}
+CCard::rarityValue CCard::getRarityValue()
+{
+	return this->m_rVRarity;
+}
+CCard::cardType CCard::getCardType()
+{
+	return this->m_cTType;
+}
+CCard::targetType CCard::getTargetType()
+{
+	return this->m_tTTargets;
+}
+int CCard::getHitpoints()
+{
+	return this->m_iHitpoints;
+}
+int CCard::getDamage()
+{
+	return this->m_iDamage;
 }

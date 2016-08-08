@@ -45,15 +45,7 @@ public:
 	int getHitpoints();
 	int getDamage();
 
-	void setCardName(){}
-	void setElixirCost(){}
-	void setRarityValue(){}
-	void setCardType(){}
-	void setTargetType(){}
-	void setHitpoints(){}
-	void setDamage(){}
-
-	friend ostream& operator<<(ostream& os, const CCard& card);
+	friend ostream& operator<<(ostream& os, CCard& card);
 
 private:
 	string m_strCardName;

@@ -29,8 +29,8 @@ int main(void)
 		cout << "****************************" << endl;
 		cout << "(1) Display ALL" << endl;
 		cout << "(2) Sort Display" << endl;
-		cout << "(1) Search" << endl;
-		cout << "(1) Quit" << endl;
+		cout << "(3) Search" << endl;
+		cout << "(4) Quit" << endl;
 
 		cout << "Enter Choice: ";
 		cin >> input;
@@ -43,14 +43,19 @@ int main(void)
 			CCard temp;
 			for (int iter = 0; iter < deckSize; iter++)
 			{
-				CCard temp = deck[iter];
 				cout << "#" << iter + 1 << ": " << deck[iter] << endl;
 			}
+			break;
 		}
-
+		case 2:
+			break;
+		case 3:
+			break;
 		default:
 			break;
 		}
+		cout << endl;
+		system("pause");
+		system("cls");
 	}
-	system("pause");
 }
