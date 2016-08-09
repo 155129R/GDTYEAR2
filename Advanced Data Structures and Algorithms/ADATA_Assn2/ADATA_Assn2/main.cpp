@@ -27,6 +27,7 @@ int main(void)
 		cout << "****************************" << endl;
 		cout << "* Clash Royale Card System *" << endl;
 		cout << "****************************" << endl;
+
 		cout << "(1) Display ALL" << endl;
 		cout << "(2) Sort Display" << endl;
 		cout << "(3) Search" << endl;
