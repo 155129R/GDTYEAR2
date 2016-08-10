@@ -126,7 +126,7 @@ public:
 	void RenderSkybox();
 	void RenderBackground();
 	void Render2DMesh(Mesh *mesh, const bool enableLight, const float size=1.0f, const float x=0.0f, const float y=0.0f, const bool rotate=false, const bool flip=false);
-    void RenderTile(Mesh *mesh, int tileNum);
+	void RenderTile(Mesh *mesh, int tileNum, float tilePosX = 0.f, float tilePosY = 0.f, float size = 1.f);
 
 	enum WEAPON_ACTION
 	{

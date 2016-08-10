@@ -232,12 +232,12 @@ void SceneText::Init()
 	meshList[GEO_TILEENEMY_FRAME0] = MeshBuilder::Generate2DMesh("GEO_TILEENEMY_FRAME0", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
 	meshList[GEO_TILEENEMY_FRAME0]->textureID = LoadTGA("Image//tile20_enemy.tga");
 
-    meshList[GEO_TILE] = MeshBuilder::GenerateTiles("Tiles", 40, 40);
+	meshList[GEO_TILE] = MeshBuilder::GenerateTiles("Tiles", 40, 40);
     meshList[GEO_TILE]->textureID = LoadTGA("Image//tileset1.tga");
 
 	// Initialise and load the tile map
 	m_cMap = new CMap();
-	m_cMap->Init( 600, 800, 24, 32, 600, 1600 );
+	m_cMap->Init( 600, 800, 24, 32, 600, 1600);
 	m_cMap->LoadMap( "Image//MapDesign.csv" );
 
 	// Initialise and load the REAR tile map
@@ -396,29 +396,51 @@ void SceneText::UpdateWeaponStatus(const unsigned char key)
 	{
 		// Add a bullet object which starts at the camera position and moves in the camera's direction
 	}
+	m_cMap->theScreenMap;
 }
 
 static const float SKYBOXSIZE = 1000.f;
 
-void SceneText::RenderTile(Mesh* mesh, int tileNum)
+void SceneText::RenderTile(Mesh* mesh, int tileNum, float tilePosX, float tilePosY, float size)
 {
-    if (!mesh || mesh->textureID <= 0)
-        return;
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, 800, 0, 600, -10, 10);
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity();
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity();
+	modelStack.Translate(tilePosX, tilePosY, 0);
+	modelStack.Scale(size, size, size);
+	//if (rotate)
+	//	modelStack.Rotate(rotateAngle, 0, 0, 1);
 
-    //	glDisable(GL_DEPTH_TEST);
-    glUniform1i(m_parameters[U_LIGHTENABLED], 0);
-    glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, mesh->textureID);
-    glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
-        Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
-        glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	if (mesh->textureID > 0)
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+		glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	}
+	else
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
+	}
+	mesh->Render(tileNum*6, 6);
+	if (mesh->textureID > 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 
-        mesh->Render((tileNum) * 6, 6);
-    
-    glBindTexture(GL_TEXTURE_2D, 0);
-    //	glEnable(GL_DEPTH_TEST);
+	modelStack.PopMatrix();
+	viewStack.PopMatrix();
+	projectionStack.PopMatrix();
+
 }
 
 void SceneText::RenderText(Mesh* mesh, std::string text, Color color)
@@ -755,8 +777,9 @@ void SceneText::RenderTileMap()
 			if ( (tileOffset_x+k) >= m_cMap->getNumOfTiles_MapWidth() )
 				break;
             modelStack.PushMatrix();
-            modelStack.Scale(0.3f, 0.3f, 0.3f);
-            RenderTile(meshList[GEO_TILE], m_cMap->theScreenMap[i][m]);
+			//RenderTile(meshList[GEO_TILE], m_cMap->theScreenMap[i][m], 1 + (k * 0.6f), -4 + (i * 0.6f), 1);
+			RenderTile(meshList[GEO_TILE], m_cMap->theScreenMap[i][k], k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), 32);
+
             modelStack.PopMatrix();
 
 			/*if (m_cMap->theScreenMap[i][m] == 1)
@@ -764,6 +787,7 @@ void SceneText::RenderTileMap()
 				Render2DMesh(meshList[GEO_TILEGROUND], false, 1.0f, k*m_cMap->GetTileSize()-theHero->GetMapFineOffset_x(), 575-i*m_cMap->GetTileSize());
 			}
 			else if (m_cMap->theScreenMap[i][m] == 2)
+
 			{
 				Render2DMesh(meshList[GEO_TILETREE], false, 1.0f, k*m_cMap->GetTileSize()-theHero->GetMapFineOffset_x(), 575-i*m_cMap->GetTileSize());
 			}
@@ -820,7 +844,8 @@ void SceneText::RenderTileMap()
     //    RenderTile(meshList[GEO_TILE], tileNum);
     //    tileNum++;
     //}
-    //RenderTile(meshList[GEO_TILE], 1);
+
+
 }
 
 /********************************************************************************
