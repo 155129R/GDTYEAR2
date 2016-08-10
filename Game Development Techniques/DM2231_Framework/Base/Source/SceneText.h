@@ -17,6 +17,7 @@
 #include "GoodiesFactory.h"
 #include "Goodies.h"
 #include "TreasureChest.h"
+#include "Strategy_Kill.h"
 
 class SceneText : public Scene
 {

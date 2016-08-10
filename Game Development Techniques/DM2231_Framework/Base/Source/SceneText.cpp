@@ -55,7 +55,7 @@ SceneText::~SceneText()
 void SceneText::Init()
 {
 	// Blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.f, 0.0f);
 	// Enable depth test
 //	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
@@ -187,6 +187,7 @@ void SceneText::Init()
 	meshList[GEO_CONE] = MeshBuilder::GenerateCone("cone", Color(0.5f, 1, 0.3f), 36, 10.f, 10.f);
 	meshList[GEO_CONE]->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
 	meshList[GEO_CONE]->material.kSpecular.Set(0.f, 0.f, 0.f);
+
 	
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("LEFT", Color(1, 1, 1), 1.f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//left.tga");
@@ -207,7 +208,7 @@ void SceneText::Init()
 	meshList[GEO_GRASS_LIGHTGREEN] = MeshBuilder::GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
 	meshList[GEO_GRASS_LIGHTGREEN]->textureID = LoadTGA("Image//grass_lightgreen.tga");
 	meshList[GEO_BACKGROUND] = MeshBuilder::Generate2DMesh("GEO_BACKGROUND", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
-	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//sky_background.tga");
+	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//sky_background2.tga");
 	meshList[GEO_TILEGROUND] = MeshBuilder::Generate2DMesh("GEO_TILEGROUND", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
 	meshList[GEO_TILEGROUND]->textureID = LoadTGA("Image//tile1_ground.tga");
 	meshList[GEO_TILEHERO] = MeshBuilder::Generate2DMesh("GEO_TILEHERO", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
@@ -232,8 +233,8 @@ void SceneText::Init()
 	meshList[GEO_TILEENEMY_FRAME0] = MeshBuilder::Generate2DMesh("GEO_TILEENEMY_FRAME0", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
 	meshList[GEO_TILEENEMY_FRAME0]->textureID = LoadTGA("Image//tile20_enemy.tga");
 
-	meshList[GEO_TILE] = MeshBuilder::GenerateTiles("Tiles", 40, 40);
-    meshList[GEO_TILE]->textureID = LoadTGA("Image//tileset1.tga");
+	meshList[GEO_TILE] = MeshBuilder::GenerateTiles("Tiles", 12, 13);
+    meshList[GEO_TILE]->textureID = LoadTGA("Image//tileset2.tga");
 
 	// Initialise and load the tile map
 	m_cMap = new CMap();
@@ -345,7 +346,7 @@ void SceneText::Update(double dt)
 	if(Application::IsKeyPressed('D'))
 		this->theHero->MoveLeftRight( false, 1.0f );
 	if(Application::IsKeyPressed(' '))
-		this->theHero->SetToJumpUpwards(true);
+		//this->theHero->SetToJumpUpwards(true);
 	theHero->HeroUpdate(m_cMap);
 
 	// ReCalculate the tile offsets
@@ -360,10 +361,11 @@ void SceneText::Update(double dt)
 	{
 		theEnemy->ChangeStrategy( new CStrategy_Kill());
 	}
-	else if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 11)
+	else if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 11) 
 	{
-		theEnemy->ChangeStrategy(NULL);
-//		theEnemy->ChangeStrategy( new CStrategy_Kill());
+		CStrategy_Kill* test = new CStrategy_Kill();
+		test->SetState(CStrategy_Kill::ATTACK);
+		theEnemy->ChangeStrategy(test);
 	}
 	else
 	{
@@ -431,7 +433,7 @@ void SceneText::RenderTile(Mesh* mesh, int tileNum, float tilePosX, float tilePo
 	{
 		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
 	}
-	mesh->Render(tileNum*6, 6);
+	mesh->Render(tileNum * 6, 6);
 	if (mesh->textureID > 0)
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -709,7 +711,7 @@ void SceneText::RenderSkybox()
 void SceneText::RenderBackground()
 {
 	// Render the crosshair
-	Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f);
+	//Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f);
 }
 
 void SceneText::Render()
@@ -772,13 +774,14 @@ void SceneText::RenderTileMap()
 	{
 		for(int k = 0; k < m_cMap->GetNumOfTiles_Width()+1; k ++)
 		{
-			m = tileOffset_x + k;
+//			m = tileOffset_x + k;
 			// If we have reached the right side of the Map, then do not display the extra column of tiles.
 			if ( (tileOffset_x+k) >= m_cMap->getNumOfTiles_MapWidth() )
 				break;
             modelStack.PushMatrix();
 			//RenderTile(meshList[GEO_TILE], m_cMap->theScreenMap[i][m], 1 + (k * 0.6f), -4 + (i * 0.6f), 1);
-			RenderTile(meshList[GEO_TILE], m_cMap->theScreenMap[i][k], k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), 32);
+			if (m_cMap->theScreenMap[i][m] != 0)
+			RenderTile(meshList[GEO_TILE], m_cMap->theScreenMap[i][k], k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 590 - i*m_cMap->GetTileSize(), 32);
 
             modelStack.PopMatrix();
 
@@ -886,6 +889,6 @@ void SceneText::RenderGoodies()
 	// Render the goodies
 	for (int i=0; i<10; i++)
 	{
-		Render2DMesh(theArrayOfGoodies[i]->GetMesh(), false, 1.0f, theArrayOfGoodies[i]->GetPos_x(), theArrayOfGoodies[i]->GetPos_y());
+		//Render2DMesh(theArrayOfGoodies[i]->GetMesh(), false, 1.0f, theArrayOfGoodies[i]->GetPos_x(), theArrayOfGoodies[i]->GetPos_y());
 	}
 }
