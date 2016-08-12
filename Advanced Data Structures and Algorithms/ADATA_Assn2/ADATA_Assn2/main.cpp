@@ -1,10 +1,13 @@
 #include <iostream>
+#include "CSVHandler.h"
+#include "Card.h"
+#include <map>
+
 using std::cout;
 using std::cin;
 using std::endl;
+using std::map;
 
-#include "CSVHandler.h"
-#include "Card.h"
 
 std::vector<CCard> resultantCards;
 
@@ -20,7 +23,7 @@ enum sortsearchType
 };
 
 void sortCards(sortsearchType sortSearchMethod, int length, bool ascend);
-void searchCards(sortsearchType sortSearchMethod[]);
+void searchCards(CCard data[], sortsearchType conditionType, string conditionVal);
 
 CCard* deck;
 int deckLength;
@@ -32,7 +35,7 @@ int main(void)
 
 	int count = 0;
 	const int deckSize = myCSVHandler.cards.size();
-
+	deckLength = deckSize;
 	deck = new CCard[deckSize];
 	for (int i = 0; i < deckSize; i++)
 	{
@@ -77,11 +80,11 @@ int main(void)
             cout << "(5) Targets" << endl;
             cout << "(6) Hitpoints" << endl;
             cout << "(7) Damage" << endl;
-            int input;
+            int choice;
             cout << "Enter Choice: ";
-            cin >> input;
+            cin >> choice;
             sortsearchType ssInput;
-            switch (input)
+            switch (choice)
             {
             case 1: 
                 ssInput = NAME;
@@ -108,13 +111,20 @@ int main(void)
             cout << endl;
             cout << "Ascending (1) or Descending (2)" << endl;
             cout << "Enter Choice: ";
-            cin >> input;
+            cin >> choice;
             cout << endl;
             sortCards(ssInput, deckSize, input - 1);
             break;
         }
 		case 3:
+		{
+			searchCards(deck, NAME, "Prince");
+			for (auto card:resultantCards)
+			{
+				cout << "#" << ": " << card << endl;
+			}
 			break;
+		}
 		default:
 			break;
 		}
@@ -383,19 +393,16 @@ void sortCards(sortsearchType sortSearchMethod, int length,bool ascend)
     }
 }
 
-void searchCards(std::vector<sortsearchType, int> search_Criteria)
+void searchCards(CCard data[], sortsearchType conditionType, string conditionVal)
 {
-    for (auto criteria : search_Criteria)
-    {
-        if (criteria == NAME)
-        {
-            for (int iter = 0; iter < deckLength; iter++)
-            {
-                if (deck[iter].getCardName() == criteria)
-                {
-                    resultantCards.push_back(deck[iter]);
-                }
-            }
-        }
-    }
+	if (conditionType == NAME)
+	{
+		for (int iter = 1; iter < deckLength; iter++)
+		{
+			if (data[iter].getCardName() == conditionVal)
+			{
+				resultantCards.push_back(deck[iter]);
+			}
+		}
+	}
 }
