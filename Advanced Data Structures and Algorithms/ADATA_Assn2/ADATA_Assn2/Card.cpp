@@ -144,7 +144,7 @@ CCard::CCard(string data)
 
 ostream& operator<<(ostream& os, CCard& card)
 {
-	os << card.getCardName() << ", " << card.getElixirCost() << ", ";
+	os << card.getCardName() << ",    " << card.getElixirCost() << ",    ";
 	switch (card.getRarityValue())
 	{
 	case 0: os << "Common";
@@ -154,7 +154,7 @@ ostream& operator<<(ostream& os, CCard& card)
 	case 2: os << "Epic";
 		break;
 	}
-	os << ", ";
+	os << ",    ";
 	switch (card.getCardType())
 	{
 	case 0: os << "Troop";
@@ -164,7 +164,7 @@ ostream& operator<<(ostream& os, CCard& card)
 	case 2: os << "Spell";
 		break;
 	}
-	os << ", ";
+	os << ",    ";
 	switch (card.getTargetType())
 	{
 	case 0: os << "Ground";
@@ -176,7 +176,7 @@ ostream& operator<<(ostream& os, CCard& card)
 	case 3: os << "NA";
 		break;
 	}
-	os << ", " << card.getHitpoints() << ", " << card.getDamage();
+	os << ",    " << card.getHitpoints() << ",    " << card.getDamage();
 	return os;
 }
 
