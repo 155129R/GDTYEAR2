@@ -23,7 +23,7 @@ enum sortsearchType
 };
 
 void sortCards(sortsearchType sortSearchMethod, int length, bool ascend);
-void searchCards(CCard data[], sortsearchType conditionType, string conditionVal);
+bool searchCards(CCard data[], sortsearchType conditionType, string conditionVal);
 
 CCard* deck;
 int deckLength;
@@ -118,7 +118,91 @@ int main(void)
         }
 		case 3:
 		{
-			searchCards(deck, NAME, "Prince");
+			cout << "<Search>" << endl;
+			cout << "Add first condition: " << endl;
+			cout << "  (1) Elixir Cost" << endl;
+			cout << "  (2) Rarity" << endl;
+			cout << "  (3) Type" << endl;
+			cout << "  (4) Targets" << endl;
+			cout << "  (5) Hitpoints" << endl;
+			cout << "  (6) Damage" << endl;
+			int choice;
+			cout << "Enter choice: ";
+			cin >> choice;
+			cout << endl;
+			string value;
+			cout << "Condition #" << choice << " value: ";
+			cin >> value;
+			cout << endl;
+			sortsearchType searchCondition;
+			switch (choice)
+			{
+			case 1:
+				searchCondition = ELIXIRCOST;
+				break;
+			case 2:
+				searchCondition = RARITY;
+				break;
+			case 3:
+				searchCondition = TYPE;
+				break;
+			case 4:
+				searchCondition = TARGETS;
+				break;
+			case5:
+				searchCondition = HITPOINTS;
+				break;
+			case 6:
+				searchCondition = DAMAGE;
+				break;
+			}
+			searchCards(deck, searchCondition, value);
+
+			cout << "Add second condition: " << endl;
+			cout << "  (1) Elixir Cost" << endl;
+			cout << "  (2) Rarity" << endl;
+			cout << "  (3) Type" << endl;
+			cout << "  (4) Targets" << endl;
+			cout << "  (5) Hitpoints" << endl;
+			cout << "  (6) Damage" << endl;
+			cout << "  (7) Damage" << endl;
+
+			cout << "Enter choice: ";
+			cin >> choice;
+			cout << endl;
+			if (choice < 7 && choice >= 1)
+			{
+				switch (choice)
+				{
+				case 1:
+					searchCondition = ELIXIRCOST;
+					break;
+				case 2:
+					searchCondition = RARITY;
+					break;
+				case 3:
+					searchCondition = TYPE;
+					break;
+				case 4:
+					searchCondition = TARGETS;
+					break;
+				case5:
+					searchCondition = HITPOINTS;
+					break;
+				case 6:
+					searchCondition = DAMAGE;
+					break;
+				}
+			}
+			std::vector<CCard> temp;
+			temp = resultantCards;
+
+			if (searchCards(temp, searchCondition, value))
+			{
+				resultantCards.clear();
+				resultantCards = temp;
+			}
+			
 			for (auto card:resultantCards)
 			{
 				cout << "#" << ": " << card << endl;
@@ -393,16 +477,21 @@ void sortCards(sortsearchType sortSearchMethod, int length,bool ascend)
     }
 }
 
-void searchCards(CCard data[], sortsearchType conditionType, string conditionVal)
+bool searchCards(std::vector<CCard>data, sortsearchType conditionType, string conditionVal)
 {
 	if (conditionType == NAME)
 	{
-		for (int iter = 1; iter < deckLength; iter++)
+		for (int iter = 1; iter < data.size(); iter++)
 		{
 			if (data[iter].getCardName() == conditionVal)
 			{
 				resultantCards.push_back(deck[iter]);
+				
 			}
 		}
 	}
+
+	if (resultantCards.size() == 0)
+		return false;
+	else return true;
 }
